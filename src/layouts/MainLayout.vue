@@ -16,9 +16,26 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-            <q-tab name="calendar" label="calendar" />
-            <q-tab name="contacts" label="Contacts" />
-            <q-tab name="profile" label="Profile" />
+            <q-route-tab
+              name="calendar"
+              label="Calendar"
+              to="/calendar"
+              exact
+            />
+            <q-route-tab
+              name="contacts"
+              label="Contacts"
+              to="/contacts"
+              exact
+            />
+            <q-route-tab name="profile" label="Profile" to="/profile" exact />
+            <q-route-tab name="login" label="Login" to="/login" exact />
+            <q-route-tab
+              name="register"
+              label="Register"
+              to="/register"
+              exact
+            />
           </q-tabs>
         </div>
       </q-toolbar>
