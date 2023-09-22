@@ -1,11 +1,6 @@
 <template>
   <div class="q-pda-md">
-    <q-layout
-      view="lHh lpr lFf"
-      container
-      style="height: 800px"
-      class="shadow-2 rounded-borders"
-    >
+    <q-layout view="lHh lpr lFf" class="shadow-2 rounded-borders">
       <q-page-container>
         <div class="q-pa-md">
           <div class="q-gutter-x-lg">
@@ -72,9 +67,8 @@
         <!-- Priority Filtered List -->
         <div class="row">
           <div class="col-6">
-            <h4>Tasks Low Priority</h4>
 
-            <q-list bordered separator>
+            <q-list>
               <q-item
                 clickable
                 v-ripple

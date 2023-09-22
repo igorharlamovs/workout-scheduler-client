@@ -2,12 +2,16 @@
   <div class="q-pda-md">
     <q-layout
       view="lHh lpr lFf"
-      container
-      style="height: 800px"
       class="shadow-2 rounded-borders"
     >
       <q-page-container>
         <div class="q-pa-md" style="max-width: 400px">
+          <!-- <q-field filled :dense="dense">
+            <template v-slot:control>
+              <div class="self-center full-width no-outline" tabindex="0">{{user.name}}</div>
+            </template>
+          </q-field> -->
+      
           <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
             <q-input
               filled
@@ -44,9 +48,12 @@
 
 <script>
 import { useQuasar } from "quasar";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { api } from "boot/axios";
 import { Cookies } from "quasar";
+import { useUserStore } from "src/stores/user_store";
+
+const userStore = useUserStore();
 
 export default {
   setup() {
@@ -60,39 +67,11 @@ export default {
       password,
 
       async onSubmit() {
-        try {
-          let response = await api.post("/login", {
-            email: email.value,
-            password: password.value,
-          });
-
-          $q.notify({
-            color: "green-4",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "Success",
-          });
-
-          window.location.href = "/";
-
-          Cookies.set("accessToken", response.data.token);
-
-          //   let responseLogout = await api.post("/logout");
-          //   console.log(responseLogout);
-          //   Cookies.remove("accessToken");
-        } catch (error) {
-          $q.notify({
-            color: "red-4",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "Fail",
-          });
-        }
+        await userStore.login(email.value, password.value);
       },
 
       onReset() {
-        email.value = null;
-        password.value = null;
+        // user.value = userStore.getUser();
       },
     };
   },

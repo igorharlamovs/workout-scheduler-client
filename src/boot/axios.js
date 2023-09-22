@@ -1,6 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
-import { Cookies } from "quasar";
+import { Cookies, LocalStorage } from "quasar";
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -25,7 +25,7 @@ export default boot(({ app }) => {
   let token = Cookies.get("csrfToken");
 
   if (token) {
-    axios.defaults.headers.common["X-CSRF-TOKEN"] = token;
+    // axios.defaults.headers.common["X-CSRF-TOKEN"] = token;
     api.defaults.headers.common["X-CSRF-TOKEN"] = token;
   } else {
     console.error(
@@ -39,11 +39,12 @@ export default boot(({ app }) => {
    * a simple convenience so we don't have to attach every token manually.
    */
 
-  let accessToken = Cookies.get("accessToken");
+  let accessToken = LocalStorage.getItem("accessToken");
 
   if (accessToken) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    api.accessToken = accessToken;
   }
 
   app.config.globalProperties.$axios = axios;
