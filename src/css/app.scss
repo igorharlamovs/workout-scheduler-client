@@ -1,1 +1,25 @@
 // app global css in SCSS form
+.background {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Remove default padding & margin */
+    margin: 0;
+    padding: 0;
+    background-image: url('icons/background-image.jpg');
+    /* Cover the entire viewport */
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: darken;
+  }
+  
+  .input-field div {
+    color: $secondary;
+  }
+
+  .input-field input {
+    color: white;
+  }
+
+  .mainHeader {
+    background-color: rgb(9, 9, 9, 0.7);
+  };

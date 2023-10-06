@@ -2,15 +2,11 @@
   <div class="q-pda-md">
     <q-layout
       view="lHh lpr lFf"
-      class="shadow-2 rounded-borders"
+      class="background shadow-2 rounded-borders"
+      background="icons/workout-scheduler-logo.png"
     >
       <q-page-container>
         <div class="q-pa-md" style="max-width: 400px">
-          <!-- <q-field filled :dense="dense">
-            <template v-slot:control>
-              <div class="self-center full-width no-outline" tabindex="0">{{user.name}}</div>
-            </template>
-          </q-field> -->
       
           <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
             <q-input
@@ -48,7 +44,7 @@
 
 <script>
 import { useQuasar } from "quasar";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { api } from "boot/axios";
 import { Cookies } from "quasar";
 import { useUserStore } from "src/stores/user_store";
@@ -68,10 +64,6 @@ export default {
 
       async onSubmit() {
         await userStore.login(email.value, password.value);
-      },
-
-      onReset() {
-        // user.value = userStore.getUser();
       },
     };
   },

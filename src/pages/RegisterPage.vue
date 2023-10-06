@@ -2,9 +2,8 @@
   <div class="q-pda-md">
     <q-layout
       view="lHh lpr lFf"
-      container
-      style="height: 800px"
-      class="shadow-2 rounded-borders"
+      class="background shadow-2 rounded-borders"
+      background="icons/workout-scheduler-logo.png"
     >
       <q-page-container>
         <div class="q-pa-md" style="max-width: 400px">

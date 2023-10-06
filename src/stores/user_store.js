@@ -35,12 +35,15 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    async logout () {
+      LocalStorage.clear();
+    },
+
     async getUser () {
       try {
         const response = await api.get("/user");
-
         this.user = response.data.data;
-        
+
       } catch (error) {
         console.log("failed to fetch user");
       }
