@@ -196,21 +196,6 @@
   </q-layout>
 </template>
 
-<style>
-  .background {
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Remove default padding & margin */
-    margin: 0;
-    padding: 0;
-    background-image: url('icons/background-image.jpg');
-    /* Cover the entire viewport */
-    background-size: cover; 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: darken;
-  };
-</style>
-
 <script>
   import { useQuasar } from "quasar";
   import { ref, computed } from "vue";

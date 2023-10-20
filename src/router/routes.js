@@ -2,31 +2,37 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/HomePage.vue") }],
-  },
+    children: [
+      {
+        path: "",
+        component: () => import("pages/HomePage.vue")
+      },
 
-  {
-    path: "/register",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/RegisterPage.vue") }],
-  },
+      { 
+        path: "",
+        component: () => import("layouts/WorkoutLayout.vue"),
+        children: [
+          { 
+            path: "workoutlist",
+            component: () => import("pages/WorkoutList.vue") 
+          },
+          { 
+            path: "createworkout",
+            component: () => import("pages/CreateWorkout.vue") 
+          },
+        ]
+      },
 
-  {
-    path: "/login",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/LoginPage.vue") }],
-  },
+      { 
+        path: "register", 
+        component: () => import("pages/RegisterPage.vue") 
+      },
 
-  {
-    path: "/profile",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/ProfilePage.vue") }],
-  },
-
-  {
-    path: "/workouts",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/WorkoutsPage.vue") }],
+      { 
+        path: "login", 
+        component: () => import("pages/LoginPage.vue") 
+      },
+    ],
   },
 
   // Always leave this as last one,

@@ -67,10 +67,5 @@ export default {
       },
     };
   },
-  mounted() {
-    api.get("/sanctum/csrf-cookie").then((response) => {
-      Cookies.set("csrfToken", response.data);
-    });
-  },
 };
 </script>

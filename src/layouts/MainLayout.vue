@@ -1,14 +1,18 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout
+    view="lHh Lpr lFf"
+    class="background"
+    background="icons/workout-scheduler-logo.png"
+  >
     <q-header elevated class="mainHeader">
       <div class="row no-wrap shadow-1">
         <div class="col-2">
           <q-toolbar class="bg-none justify-center">
             <q-btn to="/">
-            <q-avatar size="md" :square="true">
-              <img src="icons/workout-scheduler-logo.png">
-            </q-avatar>
-          </q-btn>
+              <q-avatar size="md" :square="true">
+                <img src="icons/workout-scheduler-logo.png">
+              </q-avatar>
+            </q-btn>
           </q-toolbar>
         </div>
         <div class="col-8">
@@ -31,7 +35,7 @@
               </q-btn-dropdown>
               
               <q-route-tab name="contacts" label="Contacts" to="/contacts" exact />
-              <q-route-tab name="workouts" label="Workouts" to="/workouts" exact />
+              <q-route-tab name="workouts" label="Workouts" to="/workoutlist" exact />
           </q-tabs>
         </div>
 
@@ -46,7 +50,9 @@
         </div>
     </div>
     </q-header>
-    <router-view/>
+    <q-page-container>
+      <router-view></router-view>
+    </q-page-container>
   </q-layout>
 </template>
 

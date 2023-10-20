@@ -2,12 +2,11 @@ import { defineStore } from 'pinia';
 import { api } from "boot/axios";
 import { LocalStorage } from "quasar";
 
-export const useUserStore = defineStore('user', {
+export const useWorkoutStore = defineStore('workout', {
   state: () => ({
-    user: {
-      name: null,
-      email: null,
-    },
+    workouts: {
+
+    }
   }),
 
   getters: {
@@ -31,11 +30,7 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async logout () {
-      LocalStorage.clear();
-    },
-
-    async getUser () {
+    async getWorkouts () {
       try {
         const response = await api.get("/user");
         this.user = response.data.data;

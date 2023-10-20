@@ -12,14 +12,24 @@
     background-blend-mode: darken;
   }
   
-  .input-field div {
-    color: $secondary;
-  }
+.input-field div {
+  color: $secondary;
+}
 
-  .input-field input {
-    color: white;
-  }
+.input-field input {
+  color: white;
+}
 
-  .mainHeader {
-    background-color: rgb(9, 9, 9, 0.7);
-  };
+.mainHeader {
+  background-color: rgba(16, 16, 16, 0.2);
+}
+
+.dark50 {
+  background-color: rgba($color: #131313, $alpha: 0.5);
+  color: rgba($color: #ffffff, $alpha: 1.0);
+}
+
+.q-field__native, .q-field__prefix, .q-field__suffix, .q-field__input {
+  color:white;
+}
+
