@@ -48,26 +48,22 @@
   import { ref } from "vue";
   import { api } from "boot/axios";
   import { Cookies } from "quasar";
-  import { useUserStore } from "src/stores/user_store";
-  
-  const userStore = useUserStore();
   
   export default {
     setup() {
       const $q = useQuasar();
   
-      const workoutName = ref(null);
-      const repetitions = ref(null);
-      const sets        = ref(null);
-      const weight      = ref(null);
-      const duration    = ref(null);
-      let   loading     = ref(false);
-      const workoutList = ref([]);
-      let drawer = ref(false);
+      const workoutName             = ref(null);
+      const repetitions             = ref(null);
+      const sets                    = ref(null);
+      const weight                  = ref(null);
+      const duration                = ref(null);
+      let   loading                 = ref(false);
+      const workoutList             = ref([]);
+      let   drawer                  = ref(false);
 
       const menuList = [
-        { icon: 'list', label: 'Workouts', href: "workoutlist"},
-        { icon: 'create', label: 'Create Workout', href: "createworkout"}
+        { icon: 'list', label: 'Workouts', href: "workoutlist"}
      ];
   
       return {
@@ -85,11 +81,11 @@
           try {
             loading.value = true;
             let formData = {
-              workout_name: workoutName.value,
-              repetitions : repetitions.value,
-              sets        : sets.value,
-              weight      : weight.value,
-              duration    : duration.value,
+              workoutName: workoutName.value,
+              repetitions: repetitions.value,
+              sets       : sets.value,
+              weight     : weight.value,
+              duration   : duration.value,
             };
   
             const response = await api.post("/workouts", formData);

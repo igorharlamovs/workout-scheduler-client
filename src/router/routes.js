@@ -15,11 +15,7 @@ const routes = [
           { 
             path: "workoutlist",
             component: () => import("pages/WorkoutList.vue") 
-          },
-          { 
-            path: "createworkout",
-            component: () => import("pages/CreateWorkout.vue") 
-          },
+          }
         ]
       },
 
@@ -31,6 +27,10 @@ const routes = [
       { 
         path: "login", 
         component: () => import("pages/LoginPage.vue") 
+      },
+      { 
+        path: "profile", 
+        component: () => import("pages/ProfilePage.vue") 
       },
     ],
   },

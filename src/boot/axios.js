@@ -39,12 +39,12 @@ export default boot(({ app }) => {
    * a simple convenience so we don't have to attach every token manually.
    */
 
-  let accessToken = LocalStorage.getItem("accessToken");
+  let access_token = LocalStorage.getItem("access_token");
 
-  if (accessToken) {
-    // axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    api.accessToken = accessToken;
+  if (access_token) {
+    // axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+    api.access_token = access_token;
   }
 
   app.config.globalProperties.$axios = axios;

@@ -103,6 +103,7 @@ module.exports = configure(function (/* ctx */) {
         notify: {
           /* look at QuasarConfOptions from the API card */
         },
+        loading: {}
       },
 
       // iconSet: 'material-icons', // Quasar icon set
@@ -116,7 +117,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Notify", "Cookies"],
+      plugins: ["Notify", "Cookies", "Loading", "Dialog"],
     },
 
     // animations: 'all', // --- includes all animations

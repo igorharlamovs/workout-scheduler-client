@@ -49,8 +49,7 @@
 </template>
   
   <script>
-import { defineComponent, ref, onMounted, computed } from "vue";
-import { useUserStore } from "src/stores/user_store";
+import { useUserStore } from "src/stores/userStore";
 import { LocalStorage } from "quasar";
   
   export default {

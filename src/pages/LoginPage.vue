@@ -47,7 +47,7 @@ import { useQuasar } from "quasar";
 import { ref } from "vue";
 import { api } from "boot/axios";
 import { Cookies } from "quasar";
-import { useUserStore } from "src/stores/user_store";
+import { useUserStore } from "src/stores/userStore";
 
 const userStore = useUserStore();
 
