@@ -9,12 +9,18 @@ const routes = [
       },
 
       { 
-        path: "",
+        path: "workouts",
         component: () => import("layouts/WorkoutLayout.vue"),
+        children: []
+      },
+
+      { 
+        path: "",
+        component: () => import("layouts/PlanLayout.vue"),
         children: [
           { 
-            path: "workoutlist",
-            component: () => import("pages/WorkoutList.vue") 
+            path: "planlist",
+            component: () => import("pages/PlanPage.vue") 
           }
         ]
       },
@@ -28,6 +34,7 @@ const routes = [
         path: "login", 
         component: () => import("pages/LoginPage.vue") 
       },
+
       { 
         path: "profile", 
         component: () => import("pages/ProfilePage.vue") 

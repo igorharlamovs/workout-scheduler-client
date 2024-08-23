@@ -103,7 +103,8 @@ module.exports = configure(function (/* ctx */) {
         notify: {
           /* look at QuasarConfOptions from the API card */
         },
-        loading: {}
+        loading: {},
+        dark: {}
       },
 
       // iconSet: 'material-icons', // Quasar icon set

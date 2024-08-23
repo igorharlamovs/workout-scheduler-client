@@ -1,12 +1,19 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import { LocalStorage } from "quasar";
+import { LocalStorage, Loading, Notify } from "quasar";
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: {
-      name: null,
-      email: null,
+      id: api.user ? api.user.id : null,
+      name: api.user ? api.user.name : null,
+      email: api.user ? api.user.email : null,
+      password: api.user ? api.user.password : null,
+      userSettings: api.userSettings ? api.userSettings : null,
+      /**
+       * Settings
+       * - weightMetric
+       */
     },
   }),
 
@@ -14,34 +21,35 @@ export const useUserStore = defineStore('user', {
   },
 
   actions: {
-    async login (email, password) {
+    async updateUser() {
       try {
-        let response = await api.post("/login", {email, password});
+        Loading.show({ message: 'Updating User...' });
 
-        console.log("success login");
+        const response = await api.patch(`/user/${this.user.id}`, this.user);
 
-        LocalStorage.set("access_token", response.data.token);
+        if (!response) {
+          throw new Error('No response received');
+        }
 
-        this.getUser();
+        LocalStorage.set('user', response.data.user);
+        LocalStorage.set('userSettings', response.data.userSettings);
 
-        window.location.href = "/";
+        Notify.create({
+          type: 'positive',
+          color: 'teal',
+          position: 'top-right',
+          message: 'User updated successfully!',
+        });
 
       } catch (error) {
-        if(error) throw error;
-      }
-    },
-
-    async logout () {
-      LocalStorage.clear();
-    },
-
-    async getUser () {
-      try {
-        const response = await api.get("/user");
-        this.user = response.data.data;
-
-      } catch (error) {
-        console.log("failed to fetch user");
+        console.error("Failed to update user:", error);
+        Notify.create({
+          type: 'negative',
+          position: 'top-right',
+          message: 'Failed to update user. Please try again.',
+        });
+      } finally {
+        Loading.hide();
       }
     },
   },

@@ -5,11 +5,11 @@
         <q-btn
           color="teal"
           class="q-mr-md"
-          @click="showCreateWorkoutDialog = true"
+          @click="showCreatePlanDialog = true"
           text-color="white"
           unelevated
           icon="add"
-          label="Create Workout"
+          label="Create Plan"
         />
         <q-input style="width: 20%" dark dense standout v-model="searchWorkoutText">
           <template v-slot:append>
@@ -21,7 +21,7 @@
     </q-header>
     <q-page-container>
       <q-page>
-        <!-- Workout List -->
+        <!-- Plan List -->
         <q-scroll-area :bar-style="barStyle" :thumb-style="thumbStyle" style="height: 800px; max-width: 100%;">
           <div class="row">
             <div
@@ -29,78 +29,49 @@
               v-for="workout in workoutStore.workouts"
               :key="workout"
             >
-              <q-card class="my-card q-ma-xl bg-dark text-white" flat bordered>
-                <q-card-section class="dark50">
-                  <div class="text-h6">{{ workout.workoutName }}</div>
-                </q-card-section>
+            <q-card class="my-card" flat bordered>
+              <q-card-section>
+                <div class="text-overline text-orange-9">Overline</div>
+                <div class="text-h5 q-mt-sm q-mb-xs">Title</div>
+                <div class="text-caption text-grey">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </div>
+              </q-card-section>
 
-                <q-list class="text-body1 q-my-sm" horizontal>
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="primary" name="fitness_center" />
-                    </q-item-section>
+              <q-card-actions>
+                <q-btn flat color="primary" label="Share" />
+                <q-btn flat color="secondary" label="Book" />
 
-                    <q-item-section>
-                      <q-item-label>Weight</q-item-label>
-                      <q-item-label class="text-orange" id="weightMetricAbbr">{{ workout.weight }} {{ workout.weightMetric.abbreviation }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
+                <q-space />
 
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="red" name="timer" />
-                    </q-item-section>
+                <q-btn
+                  color="grey"
+                  round
+                  flat
+                  dense
+                  :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+                  @click="expanded = !expanded"
+                />
+              </q-card-actions>
 
-                    <q-item-section>
-                      <q-item-label>Duration</q-item-label>
-                      <q-item-label class="text-orange">{{ workout.duration }} {{ workout.timeMetric.abbreviation }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="green" name="format_list_numbered" />
-                    </q-item-section>
-
-                    <q-item-section>
-                      <q-item-label>Sets</q-item-label>
-                      <q-item-label class="text-orange">{{ workout.sets }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="blue" name="repeat" />
-                    </q-item-section>
-
-                    <q-item-section>
-                      <q-item-label>Reps</q-item-label>
-                      <q-item-label class="text-orange">{{ workout.repetitions }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-
-                <q-card-actions class="dark50" align="center">
-                  <q-btn square color="teal-8" size="12px" icon="add">
-                    <q-tooltip class="bg-teal">Add to plan</q-tooltip>
-                  </q-btn>
-                  <q-btn square color="teal-8" size="12px" icon="edit" @click="handleEditWorkout(workout)">
-                    <q-tooltip class="bg-teal">Edit workout</q-tooltip>
-                  </q-btn>
-                  <q-btn square color="red-8" size="12px" icon="delete" @click="workoutStore.deleteWorkout(workout.id)">
-                    <q-tooltip class="bg-red">Delete workout</q-tooltip>
-                  </q-btn>
-                </q-card-actions>
-              </q-card>
+              <q-slide-transition>
+                <div v-show="expanded">
+                  <q-separator />
+                  <q-card-section class="text-subtitle2">
+                    {{ lorem }}
+                  </q-card-section>
+                </div>
+              </q-slide-transition>
+            </q-card>
             </div>
           </div>
         </q-scroll-area>
         
-        <!-- Create Workout Modal -->
-        <q-dialog v-model="showCreateWorkoutDialog">
+        <!-- Create Plan Modal -->
+        <q-dialog v-model="showCreatePlanDialog">
           <q-card class="my-card bg-dark" style="width: 80%">
             <div class="col bg-teal row justify-center items-center" style="box-shadow: 0 1px 10px 0 teal; overflow: auto; min-height: 100px;">
-              <div class="text-h4">Create New Workout</div>
+              <div class="text-h4">Create New Plan</div>
             </div>
 
             <q-form
@@ -234,7 +205,7 @@
           </q-card>
         </q-dialog>
 
-        <!-- Edit Workout Modal -->
+        <!-- Edit Plan Modal -->
         <q-dialog v-model="showEditWorkoutDialog">
           <q-card class="my-card bg-dark" style="width: 80%">
             <div class="col bg-teal row justify-center items-center" style="box-shadow: 0 1px 10px 0 teal; overflow: auto; min-height: 100px;">
@@ -390,10 +361,10 @@
       const initStore    = useInitStore();
       const userStore    = useUserStore();
 
-      let   showCreateWorkoutDialog = ref(false);
-      let   showEditWorkoutDialog   = ref(false);
-      let   editWorkout             = ref(null);
-      const weightMetric            = ref(null);
+      let   showCreatePlanDialog  = ref(false);
+      let   showEditWorkoutDialog = ref(false);
+      let   editWorkout           = ref(null);
+      const weightMetric          = ref(null);
 
       if(!workoutStore.workouts.length) {
         workoutStore.getWorkouts();
@@ -419,14 +390,14 @@
           opacity: 1
         },
 
-        showCreateWorkoutDialog,
+        showCreatePlanDialog,
         showEditWorkoutDialog,
         editWorkout,
         weightMetric,
 
         async createWorkout() {
           await workoutStore.createWorkout();
-          this.showCreateWorkoutDialog = false;
+          this.showCreatePlanDialog = false;
         },
 
         handleEditWorkout(workout) {

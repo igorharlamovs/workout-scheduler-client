@@ -1,55 +1,64 @@
 <template>
-  <div class="q-pda-md">
-    <q-layout
-      view="lHh lpr lFf"
-      class="background shadow-2 rounded-borders"
-      background="icons/workout-scheduler-logo.png"
-    >
-      <q-page-container>
-        <div class="q-pa-md" style="max-width: 400px">
-      
-          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-            <q-input
-              filled
-              v-model="email"
-              label="Email *"
-              lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Email required']"
-            />
+  <div class="fit column justify-center content-center">
+      <div class="q-mt-xl bg-dark" style="box-shadow: 2px 2px 10px 2px rgb(0, 0, 0); overflow: auto; min-width: 600px;">
+        <div class="row">
+          <div class="col">
 
-            <q-input
-              filled
-              v-model="password"
-              label="Password *"
-              lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Password required']"
-            />
-
-            <div>
-              <q-btn label="Submit" type="submit" color="primary" />
-              <q-btn
-                label="Reset"
-                type="reset"
-                color="primary"
-                flat
-                class="q-ml-sm"
-              />
+            <div class="col row justify-center items-center" style="box-shadow: 0 1px 10px 0 teal; overflow: auto; min-height: 100px;">
+              <div class="text-h4 text-teal"><q-icon name="person" /> Login</div>
             </div>
-          </q-form>
+
+            <q-form
+              @submit="onSubmit"
+              @reset="onReset"
+              class="q-gutter-y-md q-mx-xl q-pa-md"
+            >
+              <q-input
+                v-model="email"
+                label="Email *"
+                input-style="color: white"
+                label-color="orange" 
+                color="teal" 
+                class="q-pt-md primary-shadow"
+                filled
+              />
+
+              <q-input 
+                v-model="password"
+                input-style="color: white"
+                label-color="orange" 
+                color="teal" 
+                label="Password *"
+                class="q-pt-md primary-shadow"
+                filled
+              />
+
+              <div>
+                <div class="row q-mt-xl">
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="col-8" align="right">
+                        <q-btn label="Submit" type="submit" color="teal"/>
+                        <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </q-form>
+
+          </div>
         </div>
-      </q-page-container>
-    </q-layout>
-  </div>
+      </div>
+    </div>
 </template>
 
 <script>
 import { useQuasar } from "quasar";
 import { ref } from "vue";
-import { api } from "boot/axios";
-import { Cookies } from "quasar";
-import { useUserStore } from "src/stores/userStore";
+import { useInitStore } from "src/stores/initStore";
 
-const userStore = useUserStore();
+const initStore = useInitStore();
 
 export default {
   setup() {
@@ -63,7 +72,7 @@ export default {
       password,
 
       async onSubmit() {
-        await userStore.login(email.value, password.value);
+        await initStore.login(email.value, password.value);
       },
     };
   },

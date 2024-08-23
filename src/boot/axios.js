@@ -14,7 +14,9 @@ export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   axios.defaults.withCredentials = true;
-  api.defaults.withCredentials = true;
+  // axios.defaults.withXSRFToken   = true;
+  api.defaults.withCredentials   = true;
+  // api.defaults.withXSRFToken     = true;
 
   /**
    * Next we will register the CSRF Token as a common header with Axios so that
@@ -39,12 +41,20 @@ export default boot(({ app }) => {
    * a simple convenience so we don't have to attach every token manually.
    */
 
-  let access_token = LocalStorage.getItem("access_token");
+  let access_token  = LocalStorage.getItem("access_token");
+  let user          = LocalStorage.getItem("user");
+  let userSettings  = LocalStorage.getItem("userSettings");
+  let weightMetrics = LocalStorage.getItem("weightMetrics");
+  let timeMetrics   = LocalStorage.getItem("timeMetrics");
 
   if (access_token) {
     // axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
     api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-    api.access_token = access_token;
+    api.access_token  = access_token;
+    api.user          = user;
+    api.userSettings  = userSettings;
+    api.weightMetrics = weightMetrics;
+    api.timeMetrics   = timeMetrics;
   }
 
   app.config.globalProperties.$axios = axios;

@@ -1,70 +1,92 @@
 import { defineStore } from 'pinia';
 import { api } from "boot/axios";
-import { LocalStorage } from "quasar";
 import { Loading } from "quasar";
 import { Dialog } from "quasar";
+import { useInitStore } from './initStore';
 
 export const useWorkoutStore = defineStore('workout', {
   state: () => ({
+    initStore: useInitStore(),
+
     formData: {
       workout: {
-        workoutName: null,
-        repetitions: null,
-        sets: null,
-        weight: null,
-        duration: null,
+        workoutName   : null,
+        repetitions   : null,
+        sets          : null,
+        weight        : null,
+        duration      : null,
+        weightMetricId: null,
+        timeMetricId  : null,
       }
     },
-    workouts: [],
+    workouts: []
   }),
 
-  getters: {
-  },
+  getters: {},
 
   actions: {
-    async createWorkout() {
+    async createWorkout()
+    {
       try {
+        Loading.show({message: 'Creating Workout...'});
         const response = await api.post("/workouts", this.formData.workout);
+            
         this.workouts.push(response.data.data);
 
-        this.formData.workout.workoutName = null;
-        this.formData.workout.repetitions = null;
-        this.formData.workout.sets = null;
-        this.formData.workout.weight = null;
-        this.formData.workout.duration = null;
+        this.formData.workout.workoutName    = null;
+        this.formData.workout.repetitions    = null;
+        this.formData.workout.sets           = null;
+        this.formData.workout.weight         = null;
+        this.formData.workout.duration       = null;
+        this.formData.workout.weightMetricId = null;
+        this.formData.workout.timeMetricId   = null;
+
+        Loading.hide();
+
+        return true;
 
       } catch (error) {
-        console.log("Failed to create workout");
+        console.log(error);
+        Loading.hide();
+        return false;
       }
     },
 
-    async getWorkouts () {
+    async getWorkouts()
+    {
       try {
         Loading.show({message: 'Loading Workouts...'})
         const response = await api.get("/workouts");
+
         this.workouts = response.data.data;
+
         Loading.hide()
         
       } catch (error) {
         Loading.hide()
-        console.log("failed to fetch workouts");
+        console.log(error);
       }
     },
 
-    async deleteWorkout (workoutIndex) {
+    async deleteWorkout (workoutId)
+    {
       Dialog.create({
         title: 'Delete workout?',
         message: 'Are you sure you would like to delete the workout?',
         cancel: true,
-        persistent: true,
+        persistent: false,
         dark: true,
       })
         .onOk(async () => {
           try {
-            await api.delete(`/workouts/${workoutIndex}`);
-            this.getWorkouts();
+            Loading.show({message: 'Deleting Workout...'});
+            await api.delete(`/workouts/${workoutId}`);
+            this.workouts = this.workouts.filter(workout => workout.id !== workoutId);
+            Loading.hide();
+            
           } catch (error) {
             console.log("failed to delete");
+            Loading.hide();
           }
         })
         .onCancel(() => {
@@ -74,5 +96,30 @@ export const useWorkoutStore = defineStore('workout', {
           return;
         })
     },
+
+    async editWorkout (editWorkout)
+    {
+      try {
+        Loading.show({message: 'Editing Workout...'});
+
+        let updatedWorkout = await api.patch(`/workouts/${editWorkout.id}`, editWorkout);
+
+        this.workouts = this.workouts.map(workout => {
+          if (workout.id == updatedWorkout.data.data.id) {
+            return updatedWorkout.data.data; 
+          }
+          
+          // Keep other workouts unchanged
+          return workout; 
+        });
+
+        Loading.hide();
+
+      } catch (error) {
+        console.log("failed to edit");
+        Loading.hide()
+        return false;
+      }
+    }
   },
 });
