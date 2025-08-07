@@ -2,49 +2,37 @@ import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 import { Loading } from 'quasar'
 import { Dialog } from 'quasar'
+import { useInitStore } from './initstore.js'
 
-export const useWorkoutStore = defineStore('workout', {
+export const usePlanStore = defineStore('plan', {
   state: () => ({
+    initStore: useInitStore(),
+
     formData: {
-      workout: {
-        workoutName: null,
-        repetitions: null,
-        sets: null,
-        weight: null,
-        duration: null,
-        weightMetricId: null,
-        timeMetricId: null,
+      plan: {
+        planName: null,
+        workouts: [],
       },
     },
-    workouts: [],
-    searchWorkoutName: null,
+    plans: [],
+    weekDays: [
+      { day: 'monday', selected: false, start_time: '' },
+      { day: 'tuesday', selected: false, start_time: '' },
+      { day: 'wednesday', selected: false, start_time: '' },
+      { day: 'thursday', selected: false, start_time: '' },
+      { day: 'friday', selected: false, start_time: '' },
+      { day: 'saturday', selected: false, start_time: '' },
+      { day: 'sunday', selected: false, start_time: '' },
+    ],
   }),
 
-  getters: {
-    searchedWorkouts: (state) => {
-      if (!state.searchWorkoutName) return state.workouts ?? []
-
-      return (state.workouts ?? []).filter((workout) =>
-        workout.workoutName.toLowerCase().includes(state.searchWorkoutName.toLowerCase())
-      )
-    },
-  },
+  getters: {},
 
   actions: {
-    async createWorkout() {
+    async createPlan() {
       try {
-        Loading.show({ message: 'Creating Workout...' })
-        const response = await api.post('/workouts', this.formData.workout)
-
-        this.workouts.push(response.data.data)
-
-        this.formData.workout.workoutName = null
-        this.formData.workout.repetitions = null
-        this.formData.workout.sets = null
-        this.formData.workout.weight = null
-        this.formData.workout.duration = null
-        this.formData.workout.weightMetricId = null
-        this.formData.workout.timeMetricId = null
+        Loading.show({ message: 'Creating Plan...' })
+        const response = await api.post('/plans', this.formData.plan)
 
         Loading.hide()
 
@@ -56,10 +44,10 @@ export const useWorkoutStore = defineStore('workout', {
       }
     },
 
-    async getWorkouts() {
+    async getPlans() {
       try {
-        Loading.show({ message: 'Loading Workouts...' })
-        const response = await api.get('/workouts')
+        Loading.show({ message: 'Loading Planss...' })
+        const response = await api.get('/plans')
 
         this.workouts = response.data.data
 
@@ -70,10 +58,10 @@ export const useWorkoutStore = defineStore('workout', {
       }
     },
 
-    async deleteWorkout(workoutId) {
+    async deletePlan(planId) {
       Dialog.create({
-        title: 'Delete workout?',
-        message: 'Are you sure you would like to delete the workout?',
+        title: 'Delete Plan?',
+        message: 'Are you sure you would like to delete the plan?',
         cancel: true,
         persistent: false,
         dark: true,

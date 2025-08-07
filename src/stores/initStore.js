@@ -1,80 +1,69 @@
-import { defineStore } from 'pinia';
-import { api } from "boot/axios";
-import { LocalStorage, Notify } from "quasar";
-import { Loading } from "quasar";
-import { useUserStore } from './userStore';
+import { defineStore } from 'pinia'
+import { api } from 'boot/axios'
+import { LocalStorage, Notify } from 'quasar'
+import { Loading } from 'quasar'
+import { useUserStore } from './userstore'
 
 export const useInitStore = defineStore('init', {
-  
   state: () => ({
-    userStore    : useUserStore(),
-    
-    weightMetrics: api.weightMetrics ? api.weightMetrics: [],
-    timeMetrics  : api.timeMetrics ? api.timeMetrics    : [],
+    userStore: useUserStore(),
+
+    weightMetrics: api.weightMetrics ? api.weightMetrics : [],
+    timeMetrics: api.timeMetrics ? api.timeMetrics : [],
   }),
 
-  getters: {
-    
-  },
-  
+  getters: {},
+
   actions: {
-    async login (email, password)
-    {
+    async login(email, password) {
       try {
-        let response = await api.post("/login", {email, password});
+        let response = await api.post('/login', { email, password })
 
-        console.log("success login");
+        console.log('success login')
 
-        LocalStorage.set("access_token", response.data.token);
-        LocalStorage.set("user", response.data.user);
-        LocalStorage.set("userSettings", response.data.userSettings);
+        LocalStorage.set('access_token', response.data.token)
+        LocalStorage.set('user', response.data.user)
+        LocalStorage.set('userSettings', response.data.userSettings)
 
-        await this.getWeightMetrics();
-        await this.getTimeMetrics();
+        await this.getWeightMetrics()
+        await this.getTimeMetrics()
 
-        window.location.href = "/";
-
+        window.location.href = '/'
       } catch (error) {
         Notify.create({
           type: 'negative',
           position: 'top-right',
-          message: "Invalid Credentials",
-        });
+          message: 'Invalid Credentials',
+        })
       }
     },
 
-    async logout ()
-    {
-      LocalStorage.clear();
-      window.location.href = "/";
+    async logout() {
+      LocalStorage.clear()
+      window.location.href = '/'
     },
 
-    async getWeightMetrics ()
-    {
+    async getWeightMetrics() {
       try {
-        Loading.show({message: 'Loading Weight Metrics...'})
-        const response = await api.get("/weightMetrics");
-        this.weightMetrics = response.data.data;
-        LocalStorage.set("weightMetrics", this.weightMetrics);
-        Loading.hide();
-        
+        Loading.show({ message: 'Loading Weight Metrics...' })
+        const response = await api.get('/weightMetrics')
+        this.weightMetrics = response.data.data
+        LocalStorage.set('weightMetrics', this.weightMetrics)
+        Loading.hide()
       } catch (error) {
         Loading.hide()
-        console.log("failed to fetch weight metrics");
+        console.log('failed to fetch weight metrics')
       }
     },
 
-    async getTimeMetrics ()
-    {
+    async getTimeMetrics() {
       try {
-        const response = await api.get("/timeMetrics");
-        this.timeMetrics = response.data.data;
-        LocalStorage.set("timeMetrics", this.timeMetrics);
-        
+        const response = await api.get('/timeMetrics')
+        this.timeMetrics = response.data.data
+        LocalStorage.set('timeMetrics', this.timeMetrics)
       } catch (error) {
-        console.log("Failed to fetch weight metrics");
+        console.log('Failed to fetch weight metrics')
       }
-    }
-    
+    },
   },
-});
+})
