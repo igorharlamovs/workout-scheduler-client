@@ -7,13 +7,13 @@ export const useWorkoutStore = defineStore('workout', {
   state: () => ({
     formData: {
       workout: {
+        id: null,
         workoutName: null,
         repetitions: null,
         sets: null,
         weight: null,
         duration: null,
         weightMetricId: null,
-        timeMetricId: null,
       },
     },
     workouts: [],
@@ -44,7 +44,6 @@ export const useWorkoutStore = defineStore('workout', {
         this.formData.workout.weight = null
         this.formData.workout.duration = null
         this.formData.workout.weightMetricId = null
-        this.formData.workout.timeMetricId = null
 
         Loading.hide()
 

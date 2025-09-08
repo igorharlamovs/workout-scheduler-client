@@ -1,63 +1,37 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="background">
-    <q-header elevated class="main-header">
-      <div class="row no-wrap shadow-1">
-        <div class="col-2">
-          <q-toolbar class="bg-none justify-center">
-            <q-btn to="/">
-              <q-avatar size="md" :square="true">
-                <img src="icons/workout-scheduler-logo.png" />
-              </q-avatar>
-            </q-btn>
-          </q-toolbar>
-        </div>
-        <div class="column col-8 items-start">
-          <q-tabs v-model="tab" inline-label class="bg-none">
-            <q-route-tab name="plans" label="Plans" to="/planlist" exact />
-            <q-route-tab name="workouts" label="Workouts" to="/workouts" exact />
-          </q-tabs>
-        </div>
-
-        <div class="col-2" v-if="userStore.user">
-          <q-tabs v-if="userName" v-model="tab" inline-label>
-            <q-route-tab name="profile" :label="userName" to="/profile" exact />
-          </q-tabs>
-          <q-tabs v-else v-model="tab" inline-label>
-            <q-route-tab name="login" label="Login" to="/login" exact />
-            <q-route-tab name="register" label="Register" to="/register" exact />
-          </q-tabs>
-        </div>
-      </div>
-    </q-header>
+    <q-footer bordered class="bg-grey-10 text-primary">
+      <q-tabs no-caps active-color="primary" indicator-color="transparent" class="text-orange" v-model="tab">
+        <q-route-tab name="home" label="Home" icon="house" to="/" exact />
+        <q-route-tab name="plans" label="Plans" icon="event_note" to="/planlist" exact />
+        <q-route-tab name="workouts" label="Workouts" icon="fitness_center" to="/workouts" exact />
+        <q-route-tab v-if="userStore.user" name="profile" label="Profile" icon="account_circle" to="/profile" exact />
+        <q-route-tab v-if="!userStore.user" name="login" label="Login" to="/login" exact />
+        <q-route-tab v-if="!userStore.user" name="register" label="Register" to="/register" exact />
+      </q-tabs>
+    </q-footer>
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref, computed } from 'vue'
+<script setup>
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUserStore } from 'src/stores/userstore'
-import { LocalStorage, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const userStore = useUserStore()
-const userName = computed(() => userStore.user.name)
+const route = useRoute()
 
-export default defineComponent({
-  name: 'MainLayout',
+const tab = ref(route.name) // initialize with current route
 
-  setup() {
-    const $q = useQuasar()
-    // $q.dark.set(true);
-    const tab = ref('Tab 1')
-    const items = ref(['Item 1', 'Item 2', 'Item 3'])
-
-    return {
-      tab,
-      items,
-      userName,
-      userStore,
-    }
-  },
-})
+watch(
+  () => route.name,
+  (newName) => {
+    tab.value = newName
+  }
+)
 </script>

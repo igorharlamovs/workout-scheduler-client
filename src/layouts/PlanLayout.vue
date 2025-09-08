@@ -174,8 +174,8 @@
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
 import { useWorkoutStore } from 'src/stores/workoutstore.js'
-import { usePlanStore } from 'src/stores/planStore'
-import { useInitStore } from 'initStore'
+import { usePlanStore } from 'src/stores/planstore.js'
+import { useInitStore } from 'src/stores/initstore.js'
 import { useUserStore } from 'src/stores/userstore.js'
 
 export default {

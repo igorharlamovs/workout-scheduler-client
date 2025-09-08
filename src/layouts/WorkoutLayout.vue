@@ -1,17 +1,30 @@
 <template>
   <q-layout>
-    <q-header class="bg-dark">
-      <q-toolbar class="justify-end">
+    <q-header class="bg-grey-10">
+      <q-toolbar class="q-gutter-sm q-py-sm">
+        <!-- Create Workout Button - Left Aligned -->
         <q-btn
+          class="q-mr-sm"
           color="teal"
-          class="q-mr-md"
           @click="showCreateWorkoutDialog = true"
           text-color="white"
           unelevated
           icon="add"
-          label="Create Workout"
-        />
-        <q-input style="width: 20%" dark dense standout v-model="workoutStore.searchWorkoutName">
+          :label="$q.screen.gt.sm ? 'Create Workout' : ''"
+        >
+          <q-tooltip v-if="!$q.screen.gt.sm" class="bg-teal">Create Workout</q-tooltip>
+        </q-btn>
+
+        <q-space />
+
+        <!-- Search Input - Right Aligned -->
+        <q-input
+          :style="$q.screen.gt.sm ? 'width: 40%' : 'width: 80%'"
+          dark
+          dense
+          standout
+          v-model="workoutStore.searchWorkoutName"
+        >
           <template v-slot:append>
             <q-icon v-if="workoutStore.searchWorkoutName" name="search" />
             <q-icon v-else name="clear" class="cursor-pointer" @click="workoutStore.searchWorkoutName = ''" />
@@ -24,7 +37,7 @@
         <!-- Workout List -->
         <q-scroll-area :bar-style="barStyle" :thumb-style="thumbStyle" style="height: 800px; max-width: 100%">
           <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="workout in workoutStore.searchedWorkouts" :key="workout">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="workout in workoutStore.searchedWorkouts" :key="workout.id">
               <q-card class="my-card q-ma-xl bg-dark text-white" flat bordered>
                 <q-card-section class="dark50">
                   <div class="text-h6">{{ workout.workoutName }}</div>
@@ -97,19 +110,21 @@
         </q-scroll-area>
 
         <!-- Create Workout Modal -->
-        <q-dialog v-model="showCreateWorkoutDialog">
-          <q-card class="my-card bg-dark" style="width: 80%">
-            <div
-              class="col bg-teal row justify-center items-center"
-              style="box-shadow: 0 1px 10px 0 teal; overflow: auto; min-height: 100px"
-            >
-              <div class="text-h4">Create New Workout</div>
-            </div>
+        <q-dialog v-model="showCreateWorkoutDialog" :maximized="$q.screen.lt.md">
+          <q-card class="my-card bg-dark" :style="$q.screen.lt.md ? 'height: 100%' : 'width: 700px; max-height: 90vh;'">
+            <!-- Header -->
+            <q-bar class="bg-teal text-white q-mb-md">
+              <div class="text-h6">Create New Workout</div>
+              <q-space />
+              <q-btn flat dense round icon="close" v-close-popup>
+                <q-tooltip class="bg-red">Close</q-tooltip>
+              </q-btn>
+            </q-bar>
 
-            <q-form @submit="createWorkout()" class="q-gutter-y-xl q-mx-md q-pa-sm">
+            <q-form @submit="createWorkout()" class="q-gutter-y-xl q-mx-md q-ma-lg">
               <q-input
                 v-model="workoutStore.formData.workout.workoutName"
-                class="q-pt-md primary-shadow"
+                class="primary-shadow"
                 input-style="color: white"
                 label-color="orange"
                 color="teal"
@@ -136,6 +151,7 @@
                 </div>
                 <div class="col-4">
                   <q-select
+                    auto-width
                     filled
                     class="primary-shadow"
                     input-style="color: white"
@@ -150,46 +166,34 @@
                     emit-value
                     map-options
                     label="Weight Metric"
+                    :behavior="$q.screen.lt.md ? 'dialog' : 'menu'"
+                    popup-content-class="teal-dropdown"
                   />
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-8">
-                  <q-input
-                    v-model="workoutStore.formData.workout.duration"
-                    type="number"
-                    class="q-mr-md primary-shadow"
-                    label-color="orange"
-                    input-style="color: white"
-                    color="teal"
-                    label="Duration"
-                    filled
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="timer" color="red" />
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-4">
-                  <q-select
-                    filled
-                    class="primary-shadow"
-                    input-style="color: white"
-                    label-color="orange"
-                    dark
-                    bg-color="dark"
-                    color="teal"
-                    v-model="workoutStore.formData.workout.timeMetricId"
-                    :options="initStore.timeMetrics"
-                    option-label="metricName"
-                    option-value="id"
-                    emit-value
-                    map-options
-                    label="Unit of Time"
-                  />
-                </div>
-              </div>
+              <q-input
+                class="primary-shadow q-pb-none"
+                label-color="orange"
+                input-style="color: white"
+                color="teal"
+                filled
+                v-model="workoutStore.formData.workout.duration"
+                mask="time"
+                label="Duration"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="access_time" color="red" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-time v-model="workoutStore.formData.workout.duration">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup label="Close" color="primary" flat />
+                        </div>
+                      </q-time>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
 
               <q-input
                 v-model="workoutStore.formData.workout.sets"
@@ -221,13 +225,26 @@
                 </template>
               </q-input>
 
-              <q-card-actions class="column items-center">
-                <div class="q-mt-md">
-                  <div class="row">
-                    <q-btn label="Submit" type="submit" color="teal" />
-                    <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm" />
-                  </div>
-                </div>
+              <!-- Actions -->
+              <q-card-actions align="right" class="q-pt-md">
+                <q-btn
+                  label="Dismiss"
+                  color="orange"
+                  text-color="white"
+                  unelevated
+                  class="q-px-xl no-border-radius"
+                  style="min-width: 100px"
+                  @click="showCreateWorkoutDialog = false"
+                />
+                <q-btn
+                  label="Submit"
+                  type="submit"
+                  color="teal"
+                  text-color="white"
+                  unelevated
+                  class="q-px-lg q-py-sm no-border-radius q-ml-sm"
+                  style="min-width: 140px"
+                />
               </q-card-actions>
             </q-form>
           </q-card>
@@ -307,24 +324,6 @@
                       <q-icon name="timer" color="red" />
                     </template>
                   </q-input>
-                </div>
-                <div class="col-4">
-                  <q-select
-                    filled
-                    class="primary-shadow"
-                    input-style="color: white"
-                    label-color="orange"
-                    dark
-                    bg-color="dark"
-                    color="teal"
-                    v-model="editWorkout.timeMetricId"
-                    :options="initStore.timeMetrics"
-                    option-label="metricName"
-                    option-value="id"
-                    emit-value
-                    map-options
-                    label="Unit of Time"
-                  />
                 </div>
               </div>
 

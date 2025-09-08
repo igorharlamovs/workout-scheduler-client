@@ -1,15 +1,15 @@
 // app global css in SCSS form
 .background {
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Remove default padding & margin */
-    margin: 0;
-    padding: 0;
-    background-image: url('icons/background-image.jpg');
-    /* Cover the entire viewport */
-    background-size: cover; 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: darken;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Remove default padding & margin */
+  margin: 0;
+  padding: 0;
+  background-image: url('icons/background-image.jpg');
+  /* Cover the entire viewport */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: darken;
 }
 
 // app global css in SCSS form
@@ -20,12 +20,12 @@
   padding: 0;
   background-image: url('icons/wood-background.jpg');
   /* Cover the entire viewport */
-  background-size: cover; 
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-blend-mode: darken;
 }
-  
+
 .input-field div {
   color: $secondary;
 }
@@ -40,11 +40,14 @@
 
 .dark50 {
   background-color: rgba($color: #131313, $alpha: 0.5);
-  color: rgba($color: #ffffff, $alpha: 1.0);
+  color: rgba($color: #ffffff, $alpha: 1);
 }
 
-.q-field__native, .q-field__prefix, .q-field__suffix, .q-field__input {
-  color:white;
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
 }
 
 //Remove Decrement & Increment arrows for input fields
@@ -56,7 +59,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -64,3 +67,6 @@ input[type=number] {
   box-shadow: 0 1px 0 0 $primary;
 }
 
+.teal-dropdown {
+  box-shadow: 0 2px 12px $primary !important;
+}
