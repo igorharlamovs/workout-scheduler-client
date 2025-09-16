@@ -1,3 +1,5 @@
+#Project is Work in Progress
+
 # Workout Scheduler - Frontend (Quasar / Vue 3)
 
 This repository contains the **client-side** of the Workout Scheduler project, built with **Quasar Framework** and **Vue 3**.  
