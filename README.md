@@ -25,19 +25,22 @@ git clone https://github.com/igorharlamovs/workout-scheduler-client.git
 ```
 
 2. Install dependencies
-     ```bash
-    npm install
-# or if you use Yarn
-    ```bash
-    yarn install
+```bash
+npm install
+```
+or if you use Yarn
+```bash
+yarn install
+```
 
 3. Updata axios.js config (optional)
 
    In axios.js, update base url to the server (if needed)
 
 4. Run the development server
-   ```bash
-   quasar dev
+```bash
+quasar dev
+```
 
 📂 Project Structure
 
