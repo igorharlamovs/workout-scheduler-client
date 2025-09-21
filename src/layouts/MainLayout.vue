@@ -5,9 +5,9 @@
         <q-route-tab name="home" label="Home" icon="house" to="/" exact />
         <q-route-tab name="plans" label="Plans" icon="event_note" to="/planlist" exact />
         <q-route-tab name="workouts" label="Workouts" icon="fitness_center" to="/workouts" exact />
-        <q-route-tab v-if="userStore.user" name="profile" label="Profile" icon="account_circle" to="/profile" exact />
-        <q-route-tab v-if="!userStore.user" name="login" label="Login" to="/login" exact />
-        <q-route-tab v-if="!userStore.user" name="register" label="Register" to="/register" exact />
+        <q-route-tab v-if="userStore.user.id" name="profile" label="Profile" icon="account_circle" to="/profile" exact />
+        <q-route-tab v-if="!userStore.user.id" name="login" label="Login" to="/login" exact />
+        <q-route-tab v-if="!userStore.user.id" name="register" label="Register" to="/register" exact />
       </q-tabs>
     </q-footer>
     <q-page-container>
@@ -19,7 +19,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useUserStore } from 'src/stores/userstore'
+import { useUserStore } from 'src/stores/userStore'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()

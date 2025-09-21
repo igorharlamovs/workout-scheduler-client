@@ -1,12 +1,12 @@
 {
-  "tabWidth": 2,
-  "useTabs": false,
-  "semi": false,
-  "singleQuote": true,
-  "trailingComma": "es5",
-  "printWidth": 130,
-  "vueMaxAttributesPerLine": {
-    "singleline": 5,
-    "multiline": 1
-  }
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "printWidth": 130,
+    "vueMaxAttributesPerLine": {
+        "singleline": 5,
+        "multiline": 1
+    }
 }

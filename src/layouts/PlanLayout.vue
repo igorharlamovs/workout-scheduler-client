@@ -173,10 +173,10 @@
 <script>
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
-import { useWorkoutStore } from 'src/stores/workoutstore.js'
+import { useWorkoutStore } from 'src/stores/workoutStore.js'
 import { usePlanStore } from 'src/stores/planstore.js'
-import { useInitStore } from 'src/stores/initstore.js'
-import { useUserStore } from 'src/stores/userstore.js'
+import { useInitStore } from 'src/stores/initStore.js'
+import { useUserStore } from 'src/stores/userStore.js'
 
 export default {
   setup() {

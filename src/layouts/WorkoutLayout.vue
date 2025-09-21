@@ -2,7 +2,7 @@
   <q-layout>
     <q-header class="bg-grey-10">
       <q-toolbar class="q-gutter-sm q-py-sm">
-        <!-- Create Workout Button - Left Aligned -->
+        <!-- Create Workout Button -->
         <q-btn
           class="q-mr-sm"
           color="teal"
@@ -17,7 +17,7 @@
 
         <q-space />
 
-        <!-- Search Input - Right Aligned -->
+        <!-- Search Input -->
         <q-input
           :style="$q.screen.gt.sm ? 'width: 40%' : 'width: 80%'"
           dark
@@ -32,6 +32,7 @@
         </q-input>
       </q-toolbar>
     </q-header>
+
     <q-page-container>
       <q-page>
         <!-- Workout List -->
@@ -48,12 +49,11 @@
                     <q-item-section avatar>
                       <q-icon color="primary" name="fitness_center" />
                     </q-item-section>
-
                     <q-item-section>
                       <q-item-label>Weight</q-item-label>
-                      <q-item-label class="text-orange" id="weightMetricAbbr"
-                        >{{ workout.weight }} {{ workout.weightMetric.abbreviation }}</q-item-label
-                      >
+                      <q-item-label class="text-orange" id="weightMetricAbbr">
+                        {{ workout.weight }} {{ workout.weightMetric.abbreviation }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -61,12 +61,11 @@
                     <q-item-section avatar>
                       <q-icon color="red" name="timer" />
                     </q-item-section>
-
                     <q-item-section>
                       <q-item-label>Duration</q-item-label>
-                      <q-item-label class="text-orange"
-                        >{{ workout.duration }} {{ workout.timeMetric.abbreviation }}</q-item-label
-                      >
+                      <q-item-label class="text-orange">
+                        {{ secondsToDuration(workout.duration) }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -74,7 +73,6 @@
                     <q-item-section avatar>
                       <q-icon color="green" name="format_list_numbered" />
                     </q-item-section>
-
                     <q-item-section>
                       <q-item-label>Sets</q-item-label>
                       <q-item-label class="text-orange">{{ workout.sets }}</q-item-label>
@@ -85,7 +83,6 @@
                     <q-item-section avatar>
                       <q-icon color="blue" name="repeat" />
                     </q-item-section>
-
                     <q-item-section>
                       <q-item-label>Reps</q-item-label>
                       <q-item-label class="text-orange">{{ workout.repetitions }}</q-item-label>
@@ -109,334 +106,74 @@
           </div>
         </q-scroll-area>
 
-        <!-- Create Workout Modal -->
+        <!-- Create Workout -->
         <q-dialog v-model="showCreateWorkoutDialog" :maximized="$q.screen.lt.md">
-          <q-card class="my-card bg-dark" :style="$q.screen.lt.md ? 'height: 100%' : 'width: 700px; max-height: 90vh;'">
-            <!-- Header -->
-            <q-bar class="bg-teal text-white q-mb-md">
-              <div class="text-h6">Create New Workout</div>
-              <q-space />
-              <q-btn flat dense round icon="close" v-close-popup>
-                <q-tooltip class="bg-red">Close</q-tooltip>
-              </q-btn>
-            </q-bar>
-
-            <q-form @submit="createWorkout()" class="q-gutter-y-xl q-mx-md q-ma-lg">
-              <q-input
-                v-model="workoutStore.formData.workout.workoutName"
-                class="primary-shadow"
-                input-style="color: white"
-                label-color="orange"
-                color="teal"
-                label="Workout Name *"
-                filled
-              />
-
-              <div class="row">
-                <div class="col-8">
-                  <q-input
-                    v-model.number="workoutStore.formData.workout.weight"
-                    class="q-mr-md primary-shadow"
-                    type="number"
-                    label-color="orange"
-                    input-style="color: white"
-                    color="teal"
-                    label="Weight"
-                    filled
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="fitness_center" color="primary" />
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-4">
-                  <q-select
-                    auto-width
-                    filled
-                    class="primary-shadow"
-                    input-style="color: white"
-                    label-color="orange"
-                    dark
-                    bg-color="dark"
-                    color="teal"
-                    v-model="workoutStore.formData.workout.weightMetricId"
-                    :options="initStore.weightMetrics"
-                    option-label="metricName"
-                    option-value="id"
-                    emit-value
-                    map-options
-                    label="Weight Metric"
-                    :behavior="$q.screen.lt.md ? 'dialog' : 'menu'"
-                    popup-content-class="teal-dropdown"
-                  />
-                </div>
-              </div>
-
-              <q-input
-                class="primary-shadow q-pb-none"
-                label-color="orange"
-                input-style="color: white"
-                color="teal"
-                filled
-                v-model="workoutStore.formData.workout.duration"
-                mask="time"
-                label="Duration"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="access_time" color="red" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-time v-model="workoutStore.formData.workout.duration">
-                        <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                      </q-time>
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-
-              <q-input
-                v-model="workoutStore.formData.workout.sets"
-                type="number"
-                class="primary-shadow"
-                label-color="orange"
-                input-style="color: white"
-                color="teal"
-                label="Sets *"
-                filled
-              >
-                <template v-slot:prepend>
-                  <q-icon name="format_list_numbered" color="green" />
-                </template>
-              </q-input>
-
-              <q-input
-                v-model="workoutStore.formData.workout.repetitions"
-                type="number"
-                class="primary-shadow"
-                label-color="orange"
-                input-style="color: white"
-                color="teal"
-                label="Repetitions *"
-                filled
-              >
-                <template v-slot:prepend>
-                  <q-icon name="repeat" color="blue" />
-                </template>
-              </q-input>
-
-              <!-- Actions -->
-              <q-card-actions align="right" class="q-pt-md">
-                <q-btn
-                  label="Dismiss"
-                  color="orange"
-                  text-color="white"
-                  unelevated
-                  class="q-px-xl no-border-radius"
-                  style="min-width: 100px"
-                  @click="showCreateWorkoutDialog = false"
-                />
-                <q-btn
-                  label="Submit"
-                  type="submit"
-                  color="teal"
-                  text-color="white"
-                  unelevated
-                  class="q-px-lg q-py-sm no-border-radius q-ml-sm"
-                  style="min-width: 140px"
-                />
-              </q-card-actions>
-            </q-form>
-          </q-card>
+          <WorkoutForm v-model="workoutStore.formData.workout" :isEdit="false" @submit="createWorkout" />
         </q-dialog>
 
-        <!-- Edit Workout Modal -->
-        <q-dialog v-model="showEditWorkoutDialog">
-          <q-card class="my-card bg-dark" style="width: 80%">
-            <div
-              class="col bg-teal row justify-center items-center"
-              style="box-shadow: 0 1px 10px 0 teal; overflow: auto; min-height: 100px"
-            >
-              <div class="text-h4">Edit Workout</div>
-            </div>
-
-            <q-form @submit="submitEditWorkout(editWorkout)" class="q-gutter-y-xl q-mx-md q-pa-md">
-              <q-input
-                v-model="editWorkout.workoutName"
-                input-style="color: white"
-                label-color="orange"
-                color="teal"
-                label="Workout Name *"
-                class="q-pt-md primary-shadow"
-                filled
-              />
-
-              <div class="row">
-                <div class="col-8">
-                  <q-input
-                    v-model.number="editWorkout.weight"
-                    class="q-mr-md primary-shadow"
-                    type="number"
-                    label-color="orange"
-                    input-style="color: white"
-                    color="teal"
-                    label="Weight"
-                    filled
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="fitness_center" color="primary" />
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-4">
-                  <q-select
-                    filled
-                    class="primary-shadow"
-                    input-style="color: white"
-                    label-color="orange"
-                    dark
-                    bg-color="dark"
-                    color="teal"
-                    v-model="editWorkout.weightMetricId"
-                    :options="initStore.weightMetrics"
-                    option-label="metricName"
-                    option-value="id"
-                    emit-value
-                    map-options
-                    label="Weight Metric"
-                  />
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-8">
-                  <q-input
-                    v-model="editWorkout.duration"
-                    type="number"
-                    class="q-mr-md primary-shadow"
-                    label-color="orange"
-                    input-style="color: white"
-                    color="teal"
-                    label="Duration"
-                    filled
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="timer" color="red" />
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-
-              <q-input
-                v-model="editWorkout.sets"
-                type="number"
-                class="primary-shadow"
-                label-color="orange"
-                input-style="color: white"
-                color="teal"
-                label="Sets *"
-                filled
-              >
-                <template v-slot:prepend>
-                  <q-icon name="format_list_numbered" color="green" />
-                </template>
-              </q-input>
-
-              <q-input
-                v-model="editWorkout.repetitions"
-                type="number"
-                class="primary-shadow"
-                label-color="orange"
-                input-style="color: white"
-                color="teal"
-                label="Repetitions *"
-                filled
-              >
-                <template v-slot:prepend>
-                  <q-icon name="repeat" color="blue" />
-                </template>
-              </q-input>
-
-              <q-card-actions class="column items-center">
-                <div class="q-mt-md">
-                  <div class="row">
-                    <q-btn label="Submit" type="submit" color="teal" />
-                    <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm" />
-                  </div>
-                </div>
-              </q-card-actions>
-            </q-form>
-          </q-card>
+        <!-- Edit Workout -->
+        <q-dialog v-model="showEditWorkoutDialog" :maximized="$q.screen.lt.md">
+          <WorkoutForm v-model="editWorkout" :isEdit="true" @submit="submitEditWorkout" />
         </q-dialog>
       </q-page>
     </q-page-container>
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
-import { useWorkoutStore } from 'src/stores/workoutstore.js'
-import { useInitStore } from 'src/stores/initstore.js'
-import { useUserStore } from 'src/stores/userstore.js'
+import { useWorkoutStore } from 'src/stores/workoutStore.js'
+import { secondsToDuration } from '../helpers/time.js'
 
-export default {
-  setup() {
-    //Imports
-    const $q = useQuasar()
-    const workoutStore = useWorkoutStore()
-    const initStore = useInitStore()
-    const userStore = useUserStore()
+// Components
+import WorkoutForm from 'src/components/WorkoutForm.vue'
 
-    let showCreateWorkoutDialog = ref(false)
-    let showEditWorkoutDialog = ref(false)
-    let editWorkout = ref(null)
-    const weightMetric = ref(null)
+// Imports
+const $q = useQuasar()
+const workoutStore = useWorkoutStore()
 
-    if (!workoutStore.workouts.length) {
-      workoutStore.getWorkouts()
-    }
+// State
+const showCreateWorkoutDialog = ref(false)
+const showEditWorkoutDialog = ref(false)
+const editWorkout = ref(null)
 
-    return {
-      workoutStore,
-      initStore,
-      userStore,
-      barStyle: {
-        right: '2px',
-        borderRadius: '9px',
-        backgroundColor: 'teal',
-        width: '9px',
-        opacity: 0.1,
-      },
+// Methods
+const createWorkout = async (workout) => {
+  await workoutStore.createWorkout(workout)
+  showCreateWorkoutDialog.value = false
+}
 
-      thumbStyle: {
-        right: '4px',
-        borderRadius: '5px',
-        backgroundColor: 'teal',
-        width: '5px',
-        opacity: 1,
-      },
+const submitEditWorkout = async (workout) => {
+  // Patch only the changed fields
+  const response = await workoutStore.editWorkout(workout)
+  if (response) showEditWorkoutDialog.value = false
+}
 
-      showCreateWorkoutDialog,
-      showEditWorkoutDialog,
-      editWorkout,
-      weightMetric,
+const handleEditWorkout = (workout) => {
+  editWorkout.value = { ...workout }
+  showEditWorkoutDialog.value = true
+}
 
-      async createWorkout() {
-        await workoutStore.createWorkout()
-        this.showCreateWorkoutDialog = false
-      },
+// Initial fetch
+if (!workoutStore.workouts.length) {
+  workoutStore.getWorkouts()
+}
 
-      handleEditWorkout(workout) {
-        this.editWorkout = { ...workout }
-        this.showEditWorkoutDialog = true
-      },
+// Scroll styles
+const barStyle = {
+  right: '2px',
+  borderRadius: '9px',
+  backgroundColor: 'teal',
+  width: '9px',
+  opacity: 0.1,
+}
 
-      async submitEditWorkout(editWorkout) {
-        let response = await workoutStore.editWorkout(editWorkout)
-        this.showEditWorkoutDialog = response ? true : false
-      },
-    }
-  },
+const thumbStyle = {
+  right: '4px',
+  borderRadius: '5px',
+  backgroundColor: 'teal',
+  width: '5px',
+  opacity: 1,
 }
 </script>

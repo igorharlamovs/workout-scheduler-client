@@ -63,10 +63,11 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-.primary-shadow {
-  box-shadow: 0 1px 0 0 $primary;
+.teal-dropdown {
+  box-shadow: 0 1px 0px $primary !important;
 }
 
-.teal-dropdown {
-  box-shadow: 0 2px 12px $primary !important;
+.q-field--filled .q-field__control {
+  border-bottom: 1px solid $primary;
+  box-shadow: none !important;
 }
