@@ -1,77 +1,60 @@
 <template>
-  <div class="fit column justify-center content-center">
-    <div class="q-mt-xl bg-dark" style="box-shadow: 2px 2px 10px 2px rgb(0, 0, 0); overflow: auto; min-width: 600px">
-      <div class="row">
-        <div class="col">
-          <div
-            class="col row justify-center items-center"
-            style="box-shadow: 0 1px 10px 0 teal; overflow: auto; min-height: 100px"
-          >
-            <div class="text-h4 text-teal"><q-icon name="person" /> Login</div>
-          </div>
-
-          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-y-md q-mx-xl q-pa-md">
-            <q-input
-              v-model="email"
-              label="Email *"
-              input-style="color: white"
-              label-color="orange"
-              color="teal"
-              class="q-pt-md primary-shadow"
-              filled
-            />
-
-            <q-input
-              v-model="password"
-              input-style="color: white"
-              label-color="orange"
-              color="teal"
-              label="Password *"
-              class="q-pt-md primary-shadow"
-              filled
-            />
-
-            <div>
-              <div class="row q-mt-xl">
-                <div class="col-12">
-                  <div class="row">
-                    <div class="col-8" align="right">
-                      <q-btn label="Submit" type="submit" color="teal" />
-                      <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </q-form>
+  <q-page class="flex column items-center" :class="$q.screen.lt.md ? 'justify-start' : 'justify-center'">
+    <q-card
+      class="bg-dark"
+      :class="$q.screen.lt.md ? 'q-pa-lg full-width full-height no-radius' : 'q-pa-xl'"
+      :style="$q.screen.lt.md ? '' : 'width: 600px; box-shadow: 0 2px 12px rgba(0,0,0,0.8)'"
+    >
+      <!-- Header -->
+      <div class="row justify-center items-center q-py-md q-mb-md">
+        <div class="text-h5 text-teal text-center">
+          <q-icon name="person" class="q-mr-sm" />
+          Login
         </div>
       </div>
-    </div>
-  </div>
+
+      <!-- Login Form -->
+      <q-form @submit="userStore.login()" @reset="onReset" class="q-gutter-y-md">
+        <q-input
+          v-model="userStore.formData.email"
+          label="Email *"
+          input-style="color: white"
+          label-color="orange"
+          color="teal"
+          class="primary-shadow"
+          filled
+        />
+
+        <q-input
+          v-model="userStore.formData.password"
+          label="Password *"
+          type="password"
+          input-style="color: white"
+          label-color="orange"
+          color="teal"
+          class="primary-shadow"
+          filled
+        />
+
+        <!-- Actions -->
+        <div class="row q-mt-lg justify-end">
+          <q-btn label="Login" type="submit" color="teal" class="q-px-md" />
+          <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm q-px-md" />
+        </div>
+      </q-form>
+    </q-card>
+  </q-page>
 </template>
 
-<script>
+<script setup>
 import { useQuasar } from 'quasar'
-import { ref } from 'vue'
-import { useInitStore } from 'src/stores/initstore.js'
+import { useUserStore } from 'src/stores/userStore.js'
 
-const initStore = useInitStore()
+const $q = useQuasar()
+const userStore = useUserStore()
 
-export default {
-  setup() {
-    const $q = useQuasar()
-
-    const email = ref(null)
-    const password = ref(null)
-
-    return {
-      email,
-      password,
-
-      async onSubmit() {
-        await initStore.login(email.value, password.value)
-      },
-    }
-  },
+function onReset() {
+  email.value = null
+  password.value = null
 }
 </script>

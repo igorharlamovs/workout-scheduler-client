@@ -1,9 +1,6 @@
 // app global css in SCSS form
 .background {
   background-color: rgba(0, 0, 0, 0.5);
-  /* Remove default padding & margin */
-  margin: 0;
-  padding: 0;
   background-image: url('icons/background-image.jpg');
   /* Cover the entire viewport */
   background-size: cover;
@@ -16,8 +13,6 @@
 .woodbg {
   background-color: rgba(0, 0, 0, 0.5);
   /* Remove default padding & margin */
-  margin: 0;
-  padding: 0;
   background-image: url('icons/wood-background.jpg');
   /* Cover the entire viewport */
   background-size: cover;
@@ -39,7 +34,7 @@
 }
 
 .dark50 {
-  background-color: rgba($color: #131313, $alpha: 0.5);
+  background-color: rgba(19, 19, 19, 0.5);
   color: rgba($color: #ffffff, $alpha: 1);
 }
 
@@ -70,4 +65,11 @@ input[type='number'] {
 .q-field--filled .q-field__control {
   border-bottom: 1px solid $primary;
   box-shadow: none !important;
+}
+
+//Mobile online styling
+@media (max-width: 767px) {
+  .auth-container {
+    justify-content: flex-start !important;
+  }
 }

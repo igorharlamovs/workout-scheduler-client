@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
 import { Loading } from 'quasar'
 import { Dialog } from 'quasar'
-import { useInitStore } from './initstore.js'
+import { useInitStore } from './initStore.js'
 
 export const usePlanStore = defineStore('plan', {
   state: () => ({

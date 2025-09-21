@@ -1,119 +1,117 @@
 <template>
-  <div class="q-pda-md">
-    <q-layout
-      view="lHh lpr lFf"
-      class="background shadow-2 rounded-borders"
-      background="icons/workout-scheduler-logo.png"
+  <q-page class="flex column items-center" :class="$q.screen.lt.md ? 'justify-start' : 'justify-center'">
+    <q-card
+      class="bg-dark"
+      :class="$q.screen.lt.md ? 'q-pa-lg full-width full-height no-radius' : 'q-pa-xl'"
+      :style="$q.screen.lt.md ? '' : 'width: 600px; box-shadow: 0 2px 12px rgba(0,0,0,0.8)'"
     >
-      <q-page-container>
-        <div class="q-pa-md" style="max-width: 400px">
-          <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-            <q-input
-              filled
-              v-model="name"
-              label="Name *"
-              hint="Name and surname"
-              lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Name required']"
-            />
+      <!-- Header -->
+      <div class="col row justify-center items-center" style="min-height: 100px">
+        <div class="text-h4 text-teal"><q-icon name="person_add" /> Register Account</div>
+      </div>
 
-            <q-input
-              filled
-              v-model="email"
-              label="Email *"
-              lazy-rules
-              type="email"
-              :rules="[(val) => (val && val.length > 0) || 'Email required']"
-            />
+      <!-- Registration Form -->
+      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-y-md">
+        <q-input
+          filled
+          v-model="name"
+          label="Name *"
+          input-style="color: white"
+          label-color="orange"
+          color="teal"
+          class="primary-shadow"
+          :rules="[rules.required, rules.max255]"
+        />
 
-            <q-input
-              filled
-              v-model="password"
-              label="Password *"
-              lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Password required']"
-            />
+        <q-input
+          filled
+          v-model="email"
+          type="email"
+          label="Email *"
+          input-style="color: white"
+          label-color="orange"
+          color="teal"
+          class="primary-shadow"
+          :rules="[rules.required, rules.max255]"
+        />
 
-            <q-input
-              filled
-              v-model="passwordConfirm"
-              label="Confirm Password *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val === password) || 'Passwords do not match',
-              ]"
-            />
+        <q-input
+          filled
+          v-model="password"
+          type="password"
+          label="Password *"
+          input-style="color: white"
+          label-color="orange"
+          color="teal"
+          class="primary-shadow"
+          :rules="[rules.required, rules.max255]"
+        />
 
-            <div>
-              <q-btn label="Submit" type="submit" color="primary" />
-              <q-btn
-                label="Reset"
-                type="reset"
-                color="primary"
-                flat
-                class="q-ml-sm"
-              />
-            </div>
-          </q-form>
+        <q-input
+          filled
+          v-model="passwordConfirm"
+          type="password"
+          label="Confirm Password *"
+          input-style="color: white"
+          label-color="orange"
+          color="teal"
+          class="primary-shadow"
+          :rules="[rules.required, rules.max255]"
+        />
+
+        <!-- Actions -->
+        <div class="row q-mt-lg justify-end">
+          <q-btn label="Register" type="submit" color="teal" class="q-px-md" />
+          <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm q-px-md" />
         </div>
-      </q-page-container>
-    </q-layout>
-  </div>
+      </q-form>
+    </q-card>
+  </q-page>
 </template>
 
-<script>
-import { useQuasar } from "quasar";
-import { ref } from "vue";
-import { api } from "boot/axios";
+<script setup>
+import { useQuasar } from 'quasar'
+import { ref } from 'vue'
+import { api } from 'boot/axios'
+import { validationRules as rules } from 'src/validation/genericRules.js'
 
-export default {
-  setup() {
-    const $q = useQuasar();
+const $q = useQuasar()
 
-    const name = ref(null);
-    const email = ref(null);
-    const password = ref(null);
-    const passwordConfirm = ref(null);
+// Form fields
+const name = ref(null)
+const email = ref(null)
+const password = ref(null)
+const passwordConfirm = ref(null)
 
-    return {
-      name,
-      email,
-      password,
-      passwordConfirm,
+async function onSubmit() {
+  try {
+    await api.post('/register', {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      passwordConfirm: passwordConfirm.value,
+    })
 
-      onSubmit() {
-        api
-          .post("/register", {
-            name: name.value,
-            email: email.value,
-            password: password.value,
-            passwordConfirm: passwordConfirm.value,
-          })
-          .then(function (response) {
-            $q.notify({
-              color: "green-4",
-              textColor: "white",
-              icon: "cloud_done",
-              message: "Success",
-            });
-          })
-          .catch(function (error) {
-            $q.notify({
-              color: "red-4",
-              textColor: "white",
-              icon: "cloud_done",
-              message: "Fail",
-            });
-          });
-      },
+    $q.notify({
+      color: 'green-4',
+      textColor: 'white',
+      icon: 'cloud_done',
+      message: 'Registration successful!',
+    })
+  } catch (error) {
+    $q.notify({
+      color: 'red-4',
+      textColor: 'white',
+      icon: 'error',
+      message: 'Registration failed. Please try again.',
+    })
+  }
+}
 
-      onReset() {
-        name.value = null;
-        email.value = null;
-        password.value = null;
-        passwordConfirm.value = null;
-      },
-    };
-  },
-};
+function onReset() {
+  name.value = null
+  email.value = null
+  password.value = null
+  passwordConfirm.value = null
+}
 </script>
