@@ -1,0 +1,15 @@
+Copyright (c) 2025 Igors Harlamovs
+
+Permission is hereby granted to copy, use, and modify this software for
+personal, educational, or non-commercial purposes, free of charge, subject to
+the following conditions:
+
+1. The software may not be sold, sublicensed, or used for any commercial
+   purpose without prior written permission from the copyright holder.
+2. This copyright notice shall be included in all copies or substantial
+   portions of the software.
+3. The software is provided "as is", without warranty of any kind, express or
+   implied, including but not limited to the warranties of merchantability,
+   fitness for a particular purpose and noninfringement.
+
+By using this software you agree to the above terms.
