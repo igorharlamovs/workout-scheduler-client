@@ -16,8 +16,10 @@ export const useUserStore = defineStore('user', {
     },
 
     formData: {
+      name: null,
       email: null,
       password: null,
+      passwordConfirm: null,
     },
   }),
 
@@ -28,16 +30,7 @@ export const useUserStore = defineStore('user', {
       try {
         let response = await api.post('/login', this.formData)
 
-        console.log('success login')
-
-        LocalStorage.set('access_token', response.data.token)
-        LocalStorage.set('user', response.data.user)
-        LocalStorage.set('userSettings', response.data.userSettings)
-
-        await this.initStore.getWeightMetrics()
-        await this.initStore.getTimeMetrics()
-
-        window.location.href = '/'
+        this.setUserData(response)
       } catch (error) {
         Notify.create({
           type: 'negative',
@@ -50,6 +43,20 @@ export const useUserStore = defineStore('user', {
     async logout() {
       LocalStorage.clear()
       window.location.href = '/'
+    },
+
+    async register() {
+      try {
+        let response = await api.post('/register', this.formData)
+
+        this.setUserData(response)
+      } catch (error) {
+        Notify.create({
+          type: 'negative',
+          position: 'top-right',
+          message: 'Registration Failed',
+        })
+      }
     },
 
     async updateUser() {
@@ -76,6 +83,23 @@ export const useUserStore = defineStore('user', {
       } finally {
         Loading.hide()
       }
+    },
+
+    async setUserData(userData) {
+      LocalStorage.set('access_token', userData.data.token)
+      LocalStorage.set('user', userData.data.user)
+      LocalStorage.set('userSettings', userData.data.userSettings)
+
+      await this.initStore.getWeightMetrics()
+      await this.initStore.getTimeMetrics()
+
+      window.location.href = '/'
+    },
+
+    resetFormData() {
+      Object.keys(this.formData).forEach((key) => {
+        this.formData[key] = null
+      })
     },
   },
 })

@@ -14,7 +14,7 @@
       </div>
 
       <!-- Login Form -->
-      <q-form @submit="userStore.login()" @reset="onReset" class="q-gutter-y-md">
+      <q-form @submit="userStore.login()" @reset="userStore.resetFormData()" class="q-gutter-y-md">
         <q-input
           v-model="userStore.formData.email"
           label="Email *"
@@ -52,9 +52,4 @@ import { useUserStore } from 'src/stores/userStore.js'
 
 const $q = useQuasar()
 const userStore = useUserStore()
-
-function onReset() {
-  email.value = null
-  password.value = null
-}
 </script>

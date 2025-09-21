@@ -11,10 +11,10 @@
       </div>
 
       <!-- Registration Form -->
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-y-md">
+      <q-form @submit="userStore.register()" @reset="userStore.resetFormData()" class="q-gutter-y-md">
         <q-input
           filled
-          v-model="name"
+          v-model="userStore.formData.name"
           label="Name *"
           input-style="color: white"
           label-color="orange"
@@ -25,7 +25,7 @@
 
         <q-input
           filled
-          v-model="email"
+          v-model="userStore.formData.email"
           type="email"
           label="Email *"
           input-style="color: white"
@@ -37,7 +37,7 @@
 
         <q-input
           filled
-          v-model="password"
+          v-model="userStore.formData.password"
           type="password"
           label="Password *"
           input-style="color: white"
@@ -49,7 +49,7 @@
 
         <q-input
           filled
-          v-model="passwordConfirm"
+          v-model="userStore.formData.passwordConfirm"
           type="password"
           label="Confirm Password *"
           input-style="color: white"
@@ -70,48 +70,8 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar'
-import { ref } from 'vue'
-import { api } from 'boot/axios'
 import { validationRules as rules } from 'src/validation/genericRules.js'
+import { useUserStore } from 'src/stores/userStore.js'
 
-const $q = useQuasar()
-
-// Form fields
-const name = ref(null)
-const email = ref(null)
-const password = ref(null)
-const passwordConfirm = ref(null)
-
-async function onSubmit() {
-  try {
-    await api.post('/register', {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      passwordConfirm: passwordConfirm.value,
-    })
-
-    $q.notify({
-      color: 'green-4',
-      textColor: 'white',
-      icon: 'cloud_done',
-      message: 'Registration successful!',
-    })
-  } catch (error) {
-    $q.notify({
-      color: 'red-4',
-      textColor: 'white',
-      icon: 'error',
-      message: 'Registration failed. Please try again.',
-    })
-  }
-}
-
-function onReset() {
-  name.value = null
-  email.value = null
-  password.value = null
-  passwordConfirm.value = null
-}
+const userStore = useUserStore()
 </script>
