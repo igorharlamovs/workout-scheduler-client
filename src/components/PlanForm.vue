@@ -17,7 +17,7 @@
       <!-- Week Days -->
       <q-list>
         <q-separator spaced />
-        <q-item-label class="text-orange" header>Week Days</q-item-label>
+        <q-item-label class="text-orange" header></q-item-label>
 
         <q-item v-for="day in form.weekDays" :key="day.day" tag="label" v-ripple class="q-mb">
           <q-item-section side middle>
@@ -132,6 +132,9 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { validationRules as rules } from 'src/validation/genericRules.js'
+import { useWorkoutStore } from 'src/stores/workoutStore'
+
+const workoutStore = useWorkoutStore()
 
 // Props
 const props = defineProps({

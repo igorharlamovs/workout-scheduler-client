@@ -51,6 +51,8 @@ export const useWorkoutStore = defineStore('workout', {
           position: 'top',
         })
 
+        this.resetFormData()
+
         return true
       } catch (error) {
         Loading.hide()
@@ -154,6 +156,12 @@ export const useWorkoutStore = defineStore('workout', {
             color: 'negative',
           })
         }
+      })
+    },
+
+    resetFormData() {
+      Object.keys(this.formData.workout).forEach((key) => {
+        this.formData.workout[key] = null
       })
     },
   },

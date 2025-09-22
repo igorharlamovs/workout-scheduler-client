@@ -14,6 +14,18 @@
         <q-tooltip v-if="!$q.screen.gt.sm" class="bg-teal">Create Workout</q-tooltip>
       </q-btn>
 
+      <q-btn
+        class="q-mr-sm"
+        color="orange"
+        @click="showCreatePlanSidebar = true"
+        text-color="white"
+        unelevated
+        icon="playlist_add"
+        :label="$q.screen.gt.sm ? 'Create Plan' : ''"
+      >
+        <q-tooltip v-if="!$q.screen.gt.sm" class="bg-orange">Create Plan</q-tooltip>
+      </q-btn>
+
       <q-space />
 
       <!-- Search Input -->
@@ -33,7 +45,75 @@
   </q-header>
 
   <q-page class="row no-wrap" style="height: 100%">
-    <q-scroll-area class="col" style="flex: 1" :bar-style="barStyle" :thumb-style="thumbStyle">
+    <!-- Drawer / Sidebar For Creating a Plan -->
+    <transition name="slide">
+      <!-- Sidebar container -->
+      <div v-if="showCreatePlanSidebar" class="plan-sidebar bg-dark text-white q-pa-md column" style="max-width: 350px">
+        <!-- Header -->
+        <div class="row items-center justify-between q-mb-md flex-shrink-0 section-header">
+          <div class="text-h6">Create Plan</div>
+          <q-btn dense flat icon="close" color="white" @click="showCreatePlanSidebar = false" />
+        </div>
+
+        <!-- Plan Name -->
+        <div class="q-mb-md section-card">
+          <q-input
+            v-model="planStore.formData.plan.name"
+            label="Plan Name"
+            filled
+            class="bg-dark text-white"
+            label-color="orange"
+            input-style="color: white"
+          />
+        </div>
+
+        <!-- Workouts -->
+        <div class="q-mb-md section-card column" style="flex: 1; max-height: calc(72px * 3)">
+          <q-item-label class="text-orange" header>Added Workouts:</q-item-label>
+          <q-scroll-area style="flex: 1 1 auto; min-height: 0" :bar-style="barStyle" :thumb-style="thumbStyle">
+            <q-item
+              v-for="(workout, i) in planStore.formData.plan.workouts"
+              :key="i"
+              class="bg-dark text-white section-item q-mx-md q-mb-sm"
+            >
+              <q-item-section>{{ workout.workoutName }}</q-item-section>
+              <q-item-section side>
+                <q-btn dense icon="delete" color="red" @click="planStore.formData.plan.workouts.splice(i, 1)" />
+              </q-item-section>
+            </q-item>
+          </q-scroll-area>
+        </div>
+
+        <!-- Weekday Reminders -->
+        <div class="q-mb-md section-card column" style="flex: 1; max-height: calc(72px * 3)">
+          <q-item-label class="text-orange" header>Remind me on:</q-item-label>
+          <q-scroll-area style="flex: 1 1 auto; min-height: 0" :bar-style="barStyle" :thumb-style="thumbStyle">
+            <q-list>
+              <q-item v-for="day in planStore.formData.plan.days" :key="day.day" tag="label" v-ripple class="q-mb section-item">
+                <q-item-section side middle>
+                  <q-checkbox v-model="day.selected" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="text-capitalize text-teal">{{ day.day }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-scroll-area>
+        </div>
+
+        <!-- Save Button -->
+        <q-btn
+          class="q-mt-md q-mx-xl"
+          label="Save Plan"
+          color="teal"
+          text-color="white"
+          unelevated
+          @click="planStore.createPlan()"
+        />
+      </div>
+    </transition>
+
+    <q-scroll-area class="q-mb-md" style="flex: 1 1 auto; min-height: 0" :bar-style="barStyle" :thumb-style="thumbStyle">
       <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="workout in workoutStore.searchedWorkouts" :key="workout.id">
           <q-card class="my-card q-ma-xl bg-dark text-white" flat bordered>
@@ -88,7 +168,7 @@
             </q-list>
 
             <q-card-actions class="dark50" align="center">
-              <q-btn square color="teal-8" size="12px" icon="add">
+              <q-btn square color="teal-8" size="12px" icon="add" @click="handleAddWorkoutToPlan(workout)">
                 <q-tooltip class="bg-teal">Add to plan</q-tooltip>
               </q-btn>
               <q-btn square color="teal-8" size="12px" icon="edit" @click="handleEditWorkout(workout)">
@@ -118,8 +198,9 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
-import { useWorkoutStore } from 'src/stores/workoutStore.js'
 import { secondsToDuration } from '../helpers/time.js'
+import { useWorkoutStore } from 'src/stores/workoutStore.js'
+import { usePlanStore } from 'src/stores/planStore.js'
 
 // Components
 import WorkoutForm from 'src/components/WorkoutForm.vue'
@@ -127,10 +208,12 @@ import WorkoutForm from 'src/components/WorkoutForm.vue'
 // Imports
 const $q = useQuasar()
 const workoutStore = useWorkoutStore()
+const planStore = usePlanStore()
 
 // State
 const showCreateWorkoutDialog = ref(false)
 const showEditWorkoutDialog = ref(false)
+const showCreatePlanSidebar = ref(false)
 const editWorkout = ref(null)
 
 // Methods
@@ -148,6 +231,10 @@ const submitEditWorkout = async (workout) => {
 const handleEditWorkout = (workout) => {
   editWorkout.value = { ...workout }
   showEditWorkoutDialog.value = true
+}
+
+const handleAddWorkoutToPlan = (workout) => {
+  planStore.formData.plan.workouts.push(workout)
 }
 
 // Initial fetch
@@ -172,3 +259,33 @@ const thumbStyle = {
   opacity: 1,
 }
 </script>
+
+<style scoped>
+.plan-sidebar {
+  width: 350px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* Slide animation */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.section-card {
+  background-color: #1e1e1e;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.section-header {
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
+}
+</style>

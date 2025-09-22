@@ -10,20 +10,20 @@ export const usePlanStore = defineStore('plan', {
 
     formData: {
       plan: {
-        planName: null,
+        name: null,
         workouts: [],
+        days: [
+          { day: 'monday', selected: false },
+          { day: 'tuesday', selected: false },
+          { day: 'wednesday', selected: false },
+          { day: 'thursday', selected: false },
+          { day: 'friday', selected: false },
+          { day: 'saturday', selected: false },
+          { day: 'sunday', selected: false },
+        ],
       },
     },
     plans: [],
-    weekDays: [
-      { day: 'monday', selected: false, start_time: '' },
-      { day: 'tuesday', selected: false, start_time: '' },
-      { day: 'wednesday', selected: false, start_time: '' },
-      { day: 'thursday', selected: false, start_time: '' },
-      { day: 'friday', selected: false, start_time: '' },
-      { day: 'saturday', selected: false, start_time: '' },
-      { day: 'sunday', selected: false, start_time: '' },
-    ],
   }),
 
   getters: {},
@@ -32,14 +32,36 @@ export const usePlanStore = defineStore('plan', {
     async createPlan() {
       try {
         Loading.show({ message: 'Creating Plan...' })
-        const response = await api.post('/plans', this.formData.plan)
+
+        //Plan name, selected days and workouts
+        const payload = {
+          name: this.formData.plan.name,
+          days: this.formData.plan.days.filter((day) => day.selected).map((day) => day.day), // only selected day names
+          workouts: this.formData.plan.workouts.map((workout) => workout.id), // only workout IDs
+        }
+
+        const response = await api.post('/plans', payload)
 
         Loading.hide()
+
+        Notify.create({
+          type: 'positive',
+          message: 'Plan created successfully',
+          position: 'top',
+        })
 
         return true
       } catch (error) {
-        console.log(error)
         Loading.hide()
+
+        Dialog.create({
+          title: 'Error',
+          message: 'Failed to create workout plan. Please try again.',
+          ok: true,
+          color: 'orange',
+          dark: true,
+        })
+
         return false
       }
     },
@@ -83,29 +105,6 @@ export const usePlanStore = defineStore('plan', {
         .onDismiss(() => {
           return
         })
-    },
-
-    async editWorkout(editWorkout) {
-      try {
-        Loading.show({ message: 'Editing Workout...' })
-
-        let updatedWorkout = await api.patch(`/workouts/${editWorkout.id}`, editWorkout)
-
-        this.workouts = this.workouts.map((workout) => {
-          if (workout.id == updatedWorkout.data.data.id) {
-            return updatedWorkout.data.data
-          }
-
-          // Keep other workouts unchanged
-          return workout
-        })
-
-        Loading.hide()
-      } catch (error) {
-        console.log('failed to edit')
-        Loading.hide()
-        return false
-      }
     },
   },
 })
