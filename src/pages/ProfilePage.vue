@@ -14,7 +14,7 @@
       </div>
 
       <!-- Profile Form -->
-      <q-form @submit="userStore.updateUser" @reset="onReset" class="q-gutter-y-md">
+      <q-form @submit="userStore.updateUser" class="q-gutter-y-md">
         <q-input
           v-model="userStore.user.name"
           label="User Name"
@@ -23,22 +23,24 @@
           color="teal"
           class="primary-shadow"
           filled
+          :rules="[rules.required, rules.max255]"
         />
 
         <q-input
           v-model="userStore.user.email"
+          type="email"
           label="Email"
           input-style="color: white"
           label-color="orange"
           color="teal"
           class="primary-shadow"
           filled
+          :rules="[rules.required, rules.max255]"
         />
 
         <!-- Actions -->
         <div class="row q-mt-lg justify-end">
           <q-btn label="Update" type="submit" color="teal" class="q-px-md" />
-          <q-btn label="Reset" type="reset" color="orange" flat class="q-ml-sm q-px-md" />
           <q-btn label="Logout" @click="userStore.logout" color="orange" flat class="q-ml-sm q-px-md" />
         </div>
       </q-form>
@@ -49,13 +51,8 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { useUserStore } from 'src/stores/userStore.js'
+import { validationRules as rules } from 'src/validation/genericRules.js'
 
 const $q = useQuasar()
 const userStore = useUserStore()
-
-// Reset form fields to their initial store values
-function onReset() {
-  userStore.user.name = ''
-  userStore.user.email = ''
-}
 </script>

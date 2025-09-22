@@ -56,7 +56,7 @@
           label-color="orange"
           color="teal"
           class="primary-shadow"
-          :rules="[rules.required, rules.max255]"
+          :rules="[rules.required, rules.max255, (val) => val === userStore.formData.password || 'Passwords must match']"
         />
 
         <!-- Actions -->
