@@ -28,6 +28,8 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login() {
       try {
+        Loading.show({ message: 'Loading...' })
+
         let response = await api.post('/login', this.formData)
 
         this.setUserData(response)
@@ -47,6 +49,8 @@ export const useUserStore = defineStore('user', {
 
     async register() {
       try {
+        Loading.show({ message: 'Loading...' })
+
         let response = await api.post('/register', this.formData)
 
         this.setUserData(response)

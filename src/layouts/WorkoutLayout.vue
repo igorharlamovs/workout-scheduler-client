@@ -113,6 +113,7 @@
       </div>
     </transition>
 
+    <!-- Workout List -->
     <q-scroll-area class="q-mb-md" style="flex: 1 1 auto; min-height: 0" :bar-style="barStyle" :thumb-style="thumbStyle">
       <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="workout in workoutStore.searchedWorkouts" :key="workout.id">

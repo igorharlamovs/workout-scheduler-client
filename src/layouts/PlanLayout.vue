@@ -16,7 +16,7 @@
 
       <!-- Search Input -->
       <q-input
-        v-model="searchText"
+        v-model="planStore.searchPlanName"
         dense
         standout
         dark
@@ -31,10 +31,10 @@
   </q-header>
 
   <!-- Page Content -->
-  <q-page class="fit row no-wrap">
-    <q-scroll-area class="col fit" :bar-style="barStyle" :thumb-style="thumbStyle" style="max-height: calc(100vh - 56px)">
+  <q-page class="fit row no-wrap" style="height: 100%">
+    <q-scroll-area class="col fit" :bar-style="barStyle" :thumb-style="thumbStyle" style="height: 350px">
       <div class="row q-pa-sm">
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-pa-xs" v-for="plan in filteredPlans" :key="plan.id">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-pa-xs" v-for="plan in planStore.searchedPlans" :key="plan.id">
           <q-card flat bordered class="bg-dark text-white">
             <q-card-section>
               <div class="text-h6">{{ plan.planName }}</div>
@@ -75,7 +75,6 @@ const planStore = usePlanStore()
 const showCreatePlanDialog = ref(false)
 const editPlan = ref({ planName: '', workouts: [] })
 const isEditMode = ref(false)
-const searchText = ref('')
 
 // Scroll styles
 const barStyle = {
@@ -93,11 +92,6 @@ const thumbStyle = {
   opacity: 1,
 }
 
-// Computed filtered plans
-const filteredPlans = computed(() =>
-  planStore.plans.filter((p) => p.planName.toLowerCase().includes(searchText.value.toLowerCase()))
-)
-
 // Methods
 const handleEditPlan = (plan) => {
   editPlan.value = { ...plan } // make a copy
@@ -114,6 +108,11 @@ const submitPlan = async (planData) => {
   showCreatePlanDialog.value = false
   isEditMode.value = false
   editPlan.value = { planName: '', workouts: [] }
+}
+
+// Initial fetch
+if (!planStore.plans.length) {
+  planStore.getPlans()
 }
 
 const deletePlan = async (id) => {

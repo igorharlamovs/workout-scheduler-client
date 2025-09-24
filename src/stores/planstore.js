@@ -24,9 +24,16 @@ export const usePlanStore = defineStore('plan', {
       },
     },
     plans: [],
+    searchPlanName: null,
   }),
 
-  getters: {},
+  getters: {
+    searchedPlans: (state) => {
+      if (!state.searchPlanName) return state.plans ?? []
+
+      return (state.plans ?? []).filter((plan) => plan.planName.toLowerCase().includes(state.searchPlanName.toLowerCase()))
+    },
+  },
 
   actions: {
     async createPlan() {
@@ -36,11 +43,13 @@ export const usePlanStore = defineStore('plan', {
         //Plan name, selected days and workouts
         const payload = {
           name: this.formData.plan.name,
-          days: this.formData.plan.days.filter((day) => day.selected).map((day) => day.day), // only selected day names
-          workouts: this.formData.plan.workouts.map((workout) => workout.id), // only workout IDs
+          // only selected day var names
+          days: this.formData.plan.days.filter((day) => day.selected).map((day) => day.day),
+          // only workout IDs
+          workouts: this.formData.plan.workouts.map((workout) => workout.id),
         }
 
-        const response = await api.post('/plans', payload)
+        let response = await api.post('/plans', payload)
 
         Loading.hide()
 
@@ -68,15 +77,22 @@ export const usePlanStore = defineStore('plan', {
 
     async getPlans() {
       try {
-        Loading.show({ message: 'Loading Planss...' })
+        Loading.show({ message: 'Loading Plans...' })
+
         const response = await api.get('/plans')
 
-        this.workouts = response.data.data
-
+        this.plans = response.data.data
         Loading.hide()
       } catch (error) {
         Loading.hide()
-        console.log(error)
+
+        Dialog.create({
+          title: 'Error',
+          message: 'Failed to load plans. Please refresh.',
+          ok: true,
+          color: 'orange',
+          dark: true,
+        })
       }
     },
 
